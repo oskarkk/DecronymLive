@@ -10,3 +10,5 @@ Installation:
 To do:
  * optimize
  * add more subreddits
+
+Screenshot: https://i.imgur.com/THhGSme.png
