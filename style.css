@@ -1,0 +1,81 @@
+.decronym {
+    background: hsla(203, 67%, 90%, 1);
+    padding: 1px 3px;
+    margin: -1px -2px;
+    transition: background color 0.2s;
+    border-radius: 2px;
+    cursor: pointer;
+    display: inline-block;
+}
+
+.decronym:hover {
+    background: #2276AB;
+    color: #fcfcfc;
+}
+
+.wrap1 {
+    position: relative;
+    display: inline-block;
+}
+
+.decronym .wrap2 {
+    position: absolute;
+    opacity: 0;
+    transition: 0.2s opacity;
+    pointer-events: none;
+    display: flex;
+    flex-direction: column;
+    width: 350px;
+    margin-left: -3px;
+    bottom: 19px;
+}
+
+.decronym:hover .wrap2 {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.decronym .meaning {
+    background: #2276AB;
+    position: static;
+    padding: 2px 8px;
+    border-radius: 2px;
+    color: #fcfcfc;
+    margin-top: 5px;
+}
+
+body .comment .entry {
+    margin-left: 32px;
+    overflow: visible;
+}
+
+.decronym a {
+    color: #fcfcfc;
+    text-decoration: underline;
+}
+
+.decronymInfo {
+    position: fixed;
+    transition: 1s opacity;
+    opacity: 0;
+    pointer-events: none;
+    left: 0;
+    right: 0;
+    bottom: 10px;
+    z-index: 10;
+    text-align: center;
+}
+
+.decronymInfo.active {
+    transition: 0s opacity;
+    opacity: 1;
+}
+
+.decronymInfo p {
+    background: #2276AB;
+    padding: 4px 8px;
+    border-radius: 2px;
+    color: #fcfcfc;
+    font-size: 10px;
+    display: inline-block;
+}
