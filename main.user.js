@@ -4,6 +4,7 @@
 // @version      1.2
 // @description  Userscript which shows meanings of acronyms on Reddit
 // @updateURL    https://github.com/oskarkk/DecronymLive/raw/master/main.user.js
+// @downloadURL  https://github.com/oskarkk/DecronymLive/raw/master/main.user.js
 // @author       oskark
 // @run-at       document-end
 // @match        *://*.reddit.com/r/spacex/comments*
