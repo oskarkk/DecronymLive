@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DecronymLive
 // @namespace    https://oskark.pl/
-// @version      1.0
+// @version      1.1
 // @description  Userscript which shows meanings of acronyms on Reddit
 // @author       oskark
 // @run-at       document-end
@@ -16,90 +16,10 @@
 // @resource     css style.css
 // ==/UserScript==
 
+(function() {
+
 $('body').prepend('<div class="decronymInfo"><p></p></div>');
-$('head').append('<style>' + `
-.decronym {
-    background: hsla(203, 67%, 90%, 1);
-    padding: 1px 3px;
-    margin: -1px -2px;
-    transition: background color 0.2s;
-    border-radius: 2px;
-    cursor: pointer;
-    display: inline-block;
-}
-
-.decronym:hover {
-    background: #2276AB;
-    color: #fcfcfc;
-}
-
-.wrap1 {
-    position: relative;
-    display: inline-block;
-}
-
-.decronym .wrap2 {
-    position: absolute;
-    opacity: 0;
-    transition: 0.2s opacity;
-    pointer-events: none;
-    display: flex;
-    flex-direction: column;
-    width: 350px;
-    margin-left: -3px;
-    bottom: 19px;
-}
-
-.decronym:hover .wrap2 {
-    opacity: 1;
-    pointer-events: all;
-}
-
-.decronym .meaning {
-    background: #2276AB;
-    position: static;
-    padding: 2px 8px;
-    border-radius: 2px;
-    color: #fcfcfc;
-    margin-top: 5px;
-}
-
-body .comment .entry {
-    margin-left: 32px;
-    overflow: visible;
-}
-
-.decronym a {
-    color: #fcfcfc;
-    text-decoration: underline;
-}
-
-.decronymInfo {
-    position: fixed;
-    transition: 1s opacity;
-    opacity: 0;
-    pointer-events: none;
-    left: 0;
-    right: 0;
-    bottom: 10px;
-    z-index: 10;
-    text-align: center;
-}
-
-.decronymInfo.active {
-    transition: 0s opacity;
-    opacity: 1;
-}
-
-.decronymInfo p {
-    background: #2276AB;
-    padding: 4px 8px;
-    border-radius: 2px;
-    color: #fcfcfc;
-    font-size: 10px;
-    display: inline-block;
-}
-` + '</style>');
+$('head').append('<style>' + GM_getResourceText('css') + '</style>');
 
 var converter = new showdown.Converter();
 // word is defined as series of alphanumeric chars, hyphens and slashes, followed by series of any other 'non-word' chars
@@ -108,6 +28,7 @@ var nonWordExp = /^[^\w\-\/]+/;
 var acronymsCount = 0, meaningsCount = 0;
 var acronymsList;
 
+// timeouts to display messages somewhat correctly
 setTimeout( function(){
 	decronymMessage('starting DecronymLive...');
 	setTimeout(function(){ decronym(); }, 300);
@@ -115,19 +36,21 @@ setTimeout( function(){
 
 function decronymMessage(message) {
 	$('.decronymInfo p').html(message);
-	$('.decronymInfo').addClass('active');
-	setTimeout(function(){ $('.decronymInfo').removeClass('active'); }, 3000);
+	$('.decronymInfo').addClass('active'); // show message
+	setTimeout(function(){ $('.decronymInfo').removeClass('active'); }, 3000); // slowly hide after 3s
 }
 
 function decronym() {
 	var startTime = Date.now();
 	// allComments is not really comments, it's every <p> in every comment
 	var allComments = $('.comment .usertext-body > div > p');
-	getAcronymsList();  // load acronyms from decronym's website
+	var allCommentsNumber = allComments.length;
+	getAcronymsList();  // load acronyms from Decronym's website
 
-	for(var y = 0; y < (allComments.length); y++) {
+	// find acronyms and insert meanings one comment at a time
+	for(var y = 0; y < allCommentsNumber; y++) {
 		var comment = $(allComments[y]).html();
-		var commentWords = splitWords(comment);
+		var commentWords = splitToWords(comment);
 		comment = findAcronymsInsertMeanings(commentWords);
 		$(allComments[y]).html(comment);
 	}
@@ -141,9 +64,11 @@ function getAcronymsList() {
 	acronymsList = JSON.parse(acronymsString);
 }
 
-function splitWords(comment) {
+// TODO: can be optimized
+function splitToWords(comment) {
 	// array of [word, non-word] arrays
 	var commentWords = [];
+	// every loop cuts one word from the comment
 	for(var i=0; comment!=''; i++) {
 		var matchNonWord = comment.match(nonWordExp);
 		var matchWord;
@@ -179,9 +104,11 @@ function findAcronymsInsertMeanings(commentWords) {
 				if( acronym == wordString ) {
 					acronymsCount++;
 					wordString = '<span class="decronym"><div class="wrap1"><div class="wrap2">';
+					// insert every meaning before the acronym
 					for(var meaning in acronymsList[acronym]) {
 						meaningsCount++;
-						wordString += '<div class="meaning">' + converter.makeHtml(acronymsList[acronym][meaning]) + '</div>';
+						var meaningHtml = converter.makeHtml(acronymsList[acronym][meaning]);
+						wordString += '<div class="meaning">' + meaningHtml + '</div>';
 					}
 					wordString += '</div></div>' + acronym + '</span>';
 					break;
@@ -192,3 +119,5 @@ function findAcronymsInsertMeanings(commentWords) {
 	}
 	return comment;
 }
+
+})();
