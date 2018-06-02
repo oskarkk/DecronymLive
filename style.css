@@ -56,7 +56,7 @@ body .comment .entry {
 
 .decronymInfo {
     position: fixed;
-    transition: 1s opacity;
+    transition: opacity 1s ease-in 1s;
     opacity: 0;
     pointer-events: none;
     left: 0;
