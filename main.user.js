@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         DecronymLive
 // @namespace    https://oskark.pl/
-// @version      1.2
+// @version      1.3
 // @description  Userscript which shows meanings of acronyms on Reddit
 // @updateURL    https://github.com/oskarkk/DecronymLive/raw/master/main.user.js
 // @downloadURL  https://github.com/oskarkk/DecronymLive/raw/master/main.user.js
