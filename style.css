@@ -27,7 +27,7 @@
     flex-direction: column;
     width: 350px;
     margin-left: -3px;
-    bottom: 19px;
+    bottom: 15px;
 }
 
 .decronym:hover .wrap2 {
@@ -41,7 +41,7 @@
     padding: 2px 8px;
     border-radius: 2px;
     color: #fcfcfc;
-    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 body .comment .entry {
